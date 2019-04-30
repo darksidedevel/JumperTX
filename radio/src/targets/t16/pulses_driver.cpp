@@ -20,37 +20,60 @@
 
 #include "opentx.h"
 
-void intmoduleStop(void);
-void extmoduleStop(void);
+void moduleStop(uint32_t port);
+void moduleSerialStart(uint32_t port, uint32_t baudrate, uint32_t period_half_us);
+void moduleNoneStart(uint32_t port);
 
-void intmoduleNoneStart(void);
-void intmodulePxxStart(void);
-
-void extmoduleNoneStart(void);
 void extmodulePpmStart(void);
 void extmodulePxxStart(void);
-void extmoduleSerialStart(uint32_t baudrate, uint32_t period_half_us);
 void extmoduleCrossfireStart(void);
 
+enum PULSES_STATUS : uint8_t {
+  DISABLED = 1,
+  ACTIVE,
+  NO_PULSES
+};
+
+volatile uint8_t s_status[NUM_MODULES] = { DISABLED, DISABLED };
+
+
+//Update timer active
 void init_no_pulses(uint32_t port)
 {
-  if (port == INTERNAL_MODULE)
-    intmoduleNoneStart();
-  else
-    extmoduleNoneStart();
+  s_status[port] = NO_PULSES;
+  //In case of shared GPIO it is more complicated.
+#if defined(SHARED_MODULE_GPIO)
+  //disable module
+  if(port == INTERNAL_MODULE) INTERNAL_MODULE_OFF();
+  if(port == EXTERNAL_MODULE) EXTERNAL_MODULE_OFF();
+
+  if(s_status[INTERNAL_MODULE] == NO_PULSES && s_status[EXTERNAL_MODULE] == NO_PULSES) {
+    moduleNoneStart(port);
+  }
+#else
+  if(port == EXTERNAL_MODULE) moduleNoneStart(port);
+#endif
 }
 
 void disable_no_pulses(uint32_t port)
 {
-  if (port == INTERNAL_MODULE)
-    intmoduleStop();
-  else
-    extmoduleStop();
+  s_status[port] = DISABLED;
+  //In case of shared GPIO it is more complicated.
+#if defined(SHARED_MODULE_GPIO)
+  if(port == INTERNAL_MODULE) INTERNAL_MODULE_OFF();
+  if(port == EXTERNAL_MODULE) EXTERNAL_MODULE_OFF();
+  if(s_status[INTERNAL_MODULE] == DISABLED && s_status[EXTERNAL_MODULE] == DISABLED) {
+    moduleNoneStart(port);
+  }
+#else
+  if(port == EXTERNAL_MODULE) moduleStop(port);
+#endif
 }
 
 void init_ppm(uint32_t port)
 {
   if (port == EXTERNAL_MODULE) {
+    s_status[port] = ACTIVE;
     extmodulePpmStart();
   }
 }
@@ -58,45 +81,40 @@ void init_ppm(uint32_t port)
 void disable_ppm(uint32_t port)
 {
   if (port == EXTERNAL_MODULE) {
-    extmoduleStop();
+    disable_no_pulses(port);
   }
 }
 
 void init_pxx(uint32_t port)
 {
-  if (port == INTERNAL_MODULE)
-    intmodulePxxStart();
-  else
+  if (port == EXTERNAL_MODULE) {
+    s_status[port] = ACTIVE;
     extmodulePxxStart();
+  }
 }
 
 void disable_pxx(uint32_t port)
 {
-  if (port == INTERNAL_MODULE)
-    intmoduleStop();
-  else
-    extmoduleStop();
+  if (port == EXTERNAL_MODULE) {
+    disable_no_pulses(port);
+  }
 }
 
-#if defined(DSM2)
 void init_serial(uint32_t port, uint32_t baudrate, uint32_t period_half_us)
 {
-  if (port == EXTERNAL_MODULE) {
-    extmoduleSerialStart(baudrate, period_half_us);
-  }
+  s_status[port] = ACTIVE;
+  moduleSerialStart(port, baudrate, period_half_us);
 }
 
 void disable_serial(uint32_t port)
 {
-  if (port == EXTERNAL_MODULE) {
-    extmoduleStop();
-  }
+  disable_no_pulses(port);
 }
-#endif
 
 void init_crossfire(uint32_t port)
 {
   if (port == EXTERNAL_MODULE) {
+    s_status[port] = ACTIVE;
     extmoduleCrossfireStart();
   }
 }
@@ -104,6 +122,6 @@ void init_crossfire(uint32_t port)
 void disable_crossfire(uint32_t port)
 {
   if (port == EXTERNAL_MODULE) {
-    extmoduleStop();
+    disable_no_pulses(port);
   }
 }

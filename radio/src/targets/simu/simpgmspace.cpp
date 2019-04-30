@@ -160,7 +160,7 @@ void simuInit()
       break;
 
 #if defined(CPUARM)
-  #if defined(PCBHORUS) || (defined(PCBTARANIS) && !defined(PCBX9E))
+  #if defined(PCBHORUS) || (defined(PCBTARANIS) && !defined(PCBX9E)) || defined(PCBT16) || defined(PCBT16HD)
     #define SWITCH_CASE    NEG_CASE
     #define SWITCH_INV     POS_CASE
   #else
@@ -202,7 +202,7 @@ void simuSetKey(uint8_t key, bool state)
     KEY_CASE(KEY_RADIO, KEYS_GPIO_REG_LEFT, KEYS_GPIO_PIN_LEFT)
     KEY_CASE(KEY_MODEL, KEYS_GPIO_REG_UP, KEYS_GPIO_PIN_UP)
     KEY_CASE(KEY_EXIT, KEYS_GPIO_REG_DOWN, KEYS_GPIO_PIN_DOWN)
-#elif defined(PCBX10)
+#elif defined(PCBX10) || defined(PCBT16) || defined(PCBT16HD)
     KEY_CASE(KEY_PGDN, KEYS_GPIO_REG_PGDN, KEYS_GPIO_PIN_PGDN)
     KEY_CASE(KEY_ENTER, KEYS_GPIO_REG_ENTER, KEYS_GPIO_PIN_ENTER)
     KEY_CASE(KEY_TELEM, KEYS_GPIO_REG_RIGHT, KEYS_GPIO_PIN_RIGHT)

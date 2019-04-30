@@ -242,7 +242,7 @@ long Open9xSim::onKeypress(FXObject*,FXSelector,void*v)
 void Open9xSim::updateKeysAndSwitches(bool start)
 {
   static int keys1[] = {
-#if defined(PCBHORUS)
+#if defined(PCBHORUS) || defined(PCBT16) || defined(PCBT16HD)
     KEY_Page_Up,   KEY_PGUP,
     KEY_Page_Down, KEY_PGDN,
     KEY_Return,    KEY_ENTER,
@@ -333,7 +333,7 @@ void Open9xSim::updateKeysAndSwitches(bool start)
   SWITCH_KEY(P, 15, 3);
   SWITCH_KEY(Q, 16, 3);
   SWITCH_KEY(R, 17, 3);
-#elif defined(PCBTARANIS) || defined(PCBHORUS)
+#elif defined(PCBTARANIS) || defined(PCBHORUS) || defined(PCBT16) || defined(PCBT16HD)
   SWITCH_KEY(A, 0, 3);
   SWITCH_KEY(B, 1, 3);
   SWITCH_KEY(C, 2, 3);
@@ -402,7 +402,7 @@ long Open9xSim::onTimeout(FXObject*, FXSelector, void*)
     SWITCH_KEY(P, 15, 3);
     SWITCH_KEY(Q, 16, 3);
     SWITCH_KEY(R, 17, 3);
-#elif defined(PCBTARANIS) || defined(PCBHORUS)
+#elif defined(PCBTARANIS) || defined(PCBHORUS) || defined(PCBT16) || defined(PCBT16HD)
     SWITCH_KEY(A, 0, 3);
     SWITCH_KEY(B, 1, 3);
     SWITCH_KEY(C, 2, 3);

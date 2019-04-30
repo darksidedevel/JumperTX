@@ -292,7 +292,7 @@ void menuModelSetup(event_t event)
     OUTPUT_TYPE_ROWS()
     EXTERNAL_MODULE_OPTION_ROW,
     MULTIMODULE_MODULE_ROWS
-    EXTERNAL_MODULE_POWER_ROW,
+    MODULE_POWER_ROW(EXTERNAL_MODULE),
     EXTRA_MODULE_ROWS
     FAILSAFE_ROWS(EXTERNAL_MODULE),
     TRAINER_ROWS });
@@ -307,7 +307,7 @@ void menuModelSetup(event_t event)
     OUTPUT_TYPE_ROWS()
     EXTERNAL_MODULE_OPTION_ROW,
     MULTIMODULE_MODULE_ROWS
-    EXTERNAL_MODULE_POWER_ROW,
+    MODULE_POWER_ROW(EXTERNAL_MODULE),
     EXTRA_MODULE_ROWS
     FAILSAFE_ROWS(EXTERNAL_MODULE),
     TRAINER_ROWS });
@@ -857,7 +857,7 @@ void menuModelSetup(event_t event)
         if (attr && (editMode>0 || p1valdiff)) {
           switch (menuHorizontalPosition) {
             case 0:
-              g_model.moduleData[EXTERNAL_MODULE].type = checkIncDec(event, g_model.moduleData[EXTERNAL_MODULE].type, MODULE_TYPE_NONE, IS_TRAINER_EXTERNAL_MODULE() ? MODULE_TYPE_NONE : MODULE_TYPE_COUNT-1, EE_MODEL, isModuleAvailable);
+              g_model.moduleData[EXTERNAL_MODULE].type = checkIncDec(event, g_model.moduleData[EXTERNAL_MODULE].type, MODULE_TYPE_NONE, IS_TRAINER_EXTERNAL_MODULE() ? MODULE_TYPE_NONE : MODULE_TYPE_COUNT-1, EE_MODEL, isExternalModuleAvailable);
               if (checkIncDec_Ret) {
                 g_model.moduleData[EXTERNAL_MODULE].rfProtocol = 0;
                 g_model.moduleData[EXTERNAL_MODULE].channelsStart = 0;

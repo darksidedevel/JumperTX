@@ -166,7 +166,6 @@ union TrainerPulsesData {
 
 extern TrainerPulsesData trainerPulsesData;
 extern const uint16_t CRCTable[];
-
 void setupPulses(uint8_t port);
 void setupPulsesDSM2(uint8_t port);
 void setupPulsesMultimodule(uint8_t port);
@@ -174,10 +173,10 @@ void setupPulsesSbus(uint8_t port);
 void setupPulsesPXX(uint8_t port);
 void setupPulsesPPMModule(uint8_t port);
 void setupPulsesPPMTrainer();
-void sendByteDsm2(uint8_t b);
-void putDsm2Flush();
-void putDsm2SerialBit(uint8_t bit);
-void sendByteSbus(uint8_t byte);
+void sendByteDsm2(uint8_t port, uint8_t b);
+void putDsm2Flush(uint8_t port);
+void putDsm2SerialBit(uint8_t port, uint8_t bit);
+void sendByteSbus(uint8_t port, uint8_t byte);
 
 #if defined(HUBSAN)
 void Hubsan_Init();
@@ -186,9 +185,10 @@ void Hubsan_Init();
 inline void startPulses()
 {
   s_pulses_paused = false;
-
 #if defined(PCBTARANIS) || defined(PCBHORUS)
+  TRACE("setupPulses(INTERNAL_MODULE);");
   setupPulses(INTERNAL_MODULE);
+  TRACE("setupPulses(EXTERNAL_MODULE);");
   setupPulses(EXTERNAL_MODULE);
 #else
   setupPulses(EXTERNAL_MODULE);

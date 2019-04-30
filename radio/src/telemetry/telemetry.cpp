@@ -83,6 +83,7 @@ void processTelemetryData(uint8_t data)
 
 void telemetryWakeup()
 {
+
 #if defined(CPUARM)
   uint8_t requiredTelemetryProtocol = modelTelemetryProtocol();
 #if defined(REVX)
@@ -384,6 +385,7 @@ void telemetryInit(uint8_t protocol)
 
 #if defined(MULTIMODULE)
   else if (protocol == PROTOCOL_MULTIMODULE || protocol == PROTOCOL_FLYSKY_IBUS) {
+    TRACE("TELEMETRY MULTI INIT");
     // The DIY Multi module always speaks 100000 baud regardless of the telemetry protocol in use
     telemetryPortInit(MULTIMODULE_BAUDRATE, TELEMETRY_SERIAL_8E2);
 #if defined(LUA)

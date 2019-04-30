@@ -1,5 +1,5 @@
 /*
- * Copyright (C) JumperTX
+ * Copyright (C) OpenTX
  *
  * Based on code named
  *   th9x - http://code.google.com/p/th9x 
@@ -477,7 +477,7 @@ inline void _send_1(uint8_t v)
 }
 
 #define BITLEN_DSM2 (8*2) //125000 Baud
-void sendByteDsm2(uint8_t b) //max 10changes 0 10 10 10 10 1
+void sendByteDsm2(uint8_t port, uint8_t b) //max 10changes 0 10 10 10 10 1
 {
   bool lev = 0;
   uint8_t len = BITLEN_DSM2; //max val: 9*16 < 256
@@ -549,7 +549,7 @@ void setupPulsesDSM2()
   }
 
   for (uint8_t counter=0; counter<14; counter++) {
-    sendByteDsm2(dsmDat[counter]);
+    sendByteDsm2(0, dsmDat[counter]);
   }
 
   pulses2MHzWPtr -= 1; //remove last stopbits and
